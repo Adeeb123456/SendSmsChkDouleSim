@@ -14,6 +14,7 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,16 +32,27 @@ public class MainActivity extends AppCompatActivity {
         }
         Telephony telephony = Telephony.getInstance(getApplicationContext());
         for(Sim sim : telephony.getAllSim()){
-      Log.d("debug",sim.getSlotId()+"");      ;
+      Log.d("debug",sim.getSlotId()+"d");
+            Log.d("debug","network "+sim.getNetwork());;
          //  sim.sendSMS(getApplicationContext(), "03101783575", "Hello World!");
 
         }
-     boolean doul=   telephony.isDualSIM();
-telephony.getSIM(0).sendSMS(getApplicationContext(), "03101883575", "Hello World!");
+sendSMS("03101883575","cxcx");
 
     }
 
-
+    public void sendSMS(String phoneNo, String msg) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, msg, null, null);
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void sendSmsOnSingleSim(int subscriptionId,String destinationAddress,String scAddress,String text,PendingIntent pisend,PendingIntent deliveryIntent){
